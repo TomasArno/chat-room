@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.root {
+  height: 100vh;
+}
+
+init-welcome {
+  border: 30px orange;
+  display: block;
+  height: 100vh;
+}
