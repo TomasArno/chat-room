@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-const API_BASE_URL = "http://localhost:2000";
+const API_BASE_URL = "https://rooms-deploy.onrender.com/";
 
 const APP = firebase.initializeApp({
   apiKey: "FqhIRDR4EqsgWVtVAbpYR2EV06EoI05IhXftIs8x",

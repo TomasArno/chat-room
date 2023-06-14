@@ -5,6 +5,6 @@ import "./pages/chat";
 import "./components/button/button";
 import "./components/text-box/text-box";
 
-window.addEventListener("load", () => {
-  Router.go("/");
-});
+// window.addEventListener("load", () => {
+//   Router.go("/");
+// });
