@@ -4,7 +4,7 @@ import { fsDb, rtDb } from "./db_admin";
 import { v4 as uuidv4 } from "uuid";
 import * as cors from "cors";
 const app = express();
-const port = 2000;
+const port = process.env.PORT || 2000;
 
 // const path = require("path");
 app.use(express.json());
