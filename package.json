@@ -4,11 +4,11 @@
   "description": "",
   "scripts": {
     "dev:front": "parcel serve ./src/index.html",
-    "dev": "nodemon --watch './server.ts' --exec 'ts-node ./dev.ts'",
+    "dev:api": "nodemon --watch './server/index.ts' --exec 'ts-node ./server/dev.ts'",
     "build:front": "parcel build ./src/index.html",
-    "build:api": "tsc ./server.ts",
+    "build:api": "tsc",
     "build": "npm run build:front && npm run build:api",
-    "start": "node ./dist/index.js"
+    "start": "node ./server/index.js"
   },
   "keywords": [],
   "author": "",

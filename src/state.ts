@@ -1,4 +1,4 @@
-import { API_BASE_URL, rtDb } from "./db_front";
+import { API_BASE_URL, rtDb } from "./firebase";
 type newState = {
   userName: string;
   longRoomId: string;
@@ -30,7 +30,7 @@ export const state = {
       cb();
     }
   },
-  subscribe(callback: () => {}) {
+  subscribe(callback: (any) => any) {
     console.log("soy el suscribe");
 
     this.listeners.push(callback);

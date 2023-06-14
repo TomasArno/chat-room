@@ -1,10 +1,12 @@
 import * as express from "express";
-import { fsDb, rtDb } from "./db_back";
+import * as path from "path";
+import { fsDb, rtDb } from "./db_admin";
 import { v4 as uuidv4 } from "uuid";
 import * as cors from "cors";
 const app = express();
-const port = 2000;
+const port = 3000;
 
+// const path = require("path");
 app.use(express.json());
 app.use(cors());
 
@@ -126,6 +128,12 @@ app.post("/messages", (req, res) => {
       res.status(401).json({ err: "Entered room does not exist" });
     }
   });
+});
+
+app.use(express.static("dist"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
 app.listen(port, () => {
