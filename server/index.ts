@@ -64,7 +64,7 @@ app.post("/rooms", (req, res) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        const roomRef = rtDb.ref(`rooms/${uuidv4().replaceAll("-", "")}`);
+        const roomRef = rtDb.ref(`rooms/${uuidv4()}`);
         roomRef
           .set({
             messages: [0],
