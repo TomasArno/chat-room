@@ -1,12 +1,8 @@
 import * as admin from "firebase-admin";
-// import * as serviceAccount from "./key.json";
-
-const firebaseConfig = admin.credential.cert(
-  JSON.parse(process.env.FIREBASE_CONFIG)
-);
+import * as serviceAccount from "./key.json";
 
 admin.initializeApp({
-  credential: firebaseConfig,
+  credential: admin.credential.cert(serviceAccount as any),
   databaseURL: process.env.DB_URL,
 });
 

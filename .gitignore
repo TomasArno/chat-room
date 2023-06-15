@@ -3,4 +3,3 @@ dist
 .parcel-cache
 .env
 dev.ts
-key.json
