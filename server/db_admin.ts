@@ -1,9 +1,13 @@
 import * as admin from "firebase-admin";
-import * as serviceAccount from "./key.json";
+// import * as serviceAccount from "./key.json";
+
+const firebaseConfig = admin.credential.cert(
+  JSON.parse(process.env.FIREBASE_CONFIG)
+);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as any),
-  databaseURL: "https://proteo-2a2ac-default-rtdb.firebaseio.com",
+  credential: firebaseConfig,
+  databaseURL: process.env.DB_URL,
 });
 
 const rtDb = admin.database();

@@ -6,12 +6,18 @@ import * as cors from "cors";
 const app = express();
 const port = process.env.PORT || 2000;
 
-// const path = require("path");
 app.use(express.json());
 app.use(cors());
 
 const usersColl = fsDb.collection("users");
 const roomsColl = fsDb.collection("rooms");
+
+app.get("/env", (req, res) => {
+  res.json({ environment: process.env.ENVIRONMENT });
+});
+app.get("/db-host", (req, res) => {
+  res.json({ dataBaseUrl: process.env.DB_URL });
+});
 
 app.post("/auth", (req, res) => {
   const { email } = req.body;

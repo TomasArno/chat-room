@@ -1,4 +1,7 @@
-import { API_BASE_URL, rtDb } from "./firebase";
+import { rtDb } from "./firebase";
+
+const API_BASE_URL = process.env.API_URL;
+
 type newState = {
   userName: string;
   longRoomId: string;
@@ -31,8 +34,6 @@ export const state = {
     }
   },
   subscribe(callback: (any) => any) {
-    console.log("soy el suscribe");
-
     this.listeners.push(callback);
   },
   connectChatroom() {
@@ -46,7 +47,6 @@ export const state = {
       const messages = snapshot.val() as [];
 
       lastState.messagesList = messages.slice(1);
-      console.log(lastState.messagesList);
 
       this.setState(lastState);
     });

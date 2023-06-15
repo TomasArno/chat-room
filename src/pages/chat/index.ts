@@ -46,7 +46,6 @@ customElements.define(
     }
 
     render() {
-      console.log("Soy el chat");
       this.shadow.innerHTML = `
       <div class="gen-container">
         <div class="descrip-container">
@@ -66,7 +65,6 @@ customElements.define(
 
       state.subscribe(() => {
         const messagesList = state.getState().messagesList;
-        console.log("suscribe del chat", messagesList);
 
         if (messagesList) {
           msgContainer.innerHTML = `

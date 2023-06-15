@@ -5,9 +5,6 @@
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */ /* Conditions to set in addition to the resolver-specific defaults when resolving imports. */,
     "resolveJsonModule": true /* Enable importing .json files. */,
     "strictNullChecks": false
-    // "lib": []
-    // "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
   },
-  "files": ["./server/index.ts", "./server/db_admin.ts"],
-  "include": ["./src/**/*", "./server/**/*"]
+  "include": ["./"]
 }
