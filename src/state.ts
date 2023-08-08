@@ -27,18 +27,20 @@ export const state = {
   getState() {
     return this.data;
   },
+
   setState(newState: newState) {
     this.data = newState;
     for (const cb of this.listeners as any) {
       cb();
     }
   },
+
   subscribe(callback: (any) => any) {
     this.listeners.push(callback);
   },
+
   connectChatroom() {
     const lastState = this.getState();
-    console.log("me conecto al chatroom", lastState);
 
     const chatRoomsRef = rtDb.ref(`/rooms/${lastState.longRoomId}/messages`);
 
@@ -51,27 +53,17 @@ export const state = {
       this.setState(lastState);
     });
   },
-  async main(callback: any) {
-    await this.signIn();
 
-    const lastState = state.getState();
+  hasBasicCredentials() {
+    const cs = this.getState();
 
-    if (!lastState.userId) {
-      await this.signUp();
-    }
-
-    if (lastState.option == "new") {
-      await this.createRoom();
-      await this.joinRoom();
+    if (cs.email && cs.userName && cs.option) {
+      return true;
     } else {
-      await this.joinRoom();
-    }
-
-    const cs = state.getState();
-    if (cs.longRoomId) {
-      callback();
+      return false;
     }
   },
+
   setBasicData(formData: {
     email: string;
     userName: string;
@@ -79,43 +71,69 @@ export const state = {
     shortRoomId?: string;
   }) {
     const lastState = this.getState();
+
     lastState.userName = formData.userName;
     lastState.email = formData.email;
     lastState.option = formData.option;
-    if (formData.shortRoomId) {
-      lastState.shortRoomId = formData.shortRoomId;
-    }
+    lastState.shortRoomId = formData.shortRoomId || "";
+
     this.setState(lastState);
   },
-  async signIn() {
-    const lastState = this.getState();
-    if (lastState.email && lastState.userName) {
-      const authData = await fetch(API_BASE_URL + "/auth", {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          email: lastState.email,
-        }),
-      });
 
-      if (authData.status == 400) {
-        const { err } = await authData.json();
-        console.error(err);
+  async main(callback: any) {
+    if (this.hasBasicCredentials()) {
+      await this.signIn();
+
+      const lastState = state.getState();
+
+      if (!lastState.userId) {
+        await this.signUp();
+      }
+
+      if (lastState.option == "new") {
+        await this.createRoom();
+        await this.joinRoom();
       } else {
-        const { id } = await authData.json();
-        lastState.userId = id;
+        await this.joinRoom();
+      }
 
-        state.setState(lastState);
-        console.log("Autenticación aceptada, este es su id: " + id);
+      const cs = state.getState();
+      if (cs.longRoomId) {
+        callback();
       }
     } else {
       console.error("You must complete the form");
     }
   },
+
+  async signIn() {
+    const lastState = this.getState();
+
+    const authData = await fetch(API_BASE_URL + "/auth", {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: lastState.email,
+      }),
+    });
+
+    if (authData.status == 400) {
+      const { err } = await authData.json();
+      console.error(err);
+    } else {
+      const { id } = await authData.json();
+      lastState.userId = id;
+
+      state.setState(lastState);
+      console.log("Autenticación aceptada, este es su id: " + id);
+    }
+  },
+
   async signUp() {
     const lastState = this.getState();
+
     const userIdData = await fetch(API_BASE_URL + "/signup", {
       method: "post",
       headers: {
@@ -137,6 +155,7 @@ export const state = {
       console.log("Usuario creado, este es su id: " + userId);
     }
   },
+
   async createRoom() {
     const lastState = this.getState();
     if (lastState.userId) {
@@ -161,6 +180,7 @@ export const state = {
       }
     }
   },
+
   async joinRoom() {
     const lastState = this.getState();
 
@@ -178,26 +198,31 @@ export const state = {
       state.setState(lastState);
     }
   },
+
   async sentMessage(message: { msg: string }) {
     const lastState = this.getState();
     const { msg } = message;
 
-    const sentMessage = await fetch(
-      API_BASE_URL + `/messages?roomId=${lastState.longRoomId}`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: lastState.userName,
-          msg,
-        }),
+    if (msg) {
+      const sentMessage = await fetch(
+        API_BASE_URL + `/messages?roomId=${lastState.longRoomId}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            userName: lastState.userName,
+            msg,
+          }),
+        }
+      );
+      if (sentMessage.status == 401) {
+        const { err } = await sentMessage.json();
+        console.error(err);
       }
-    );
-    if (sentMessage.status == 401) {
-      const { err } = await sentMessage.json();
-      console.error(err);
+    } else {
+      console.error("You can't send empty messages");
     }
   },
 };

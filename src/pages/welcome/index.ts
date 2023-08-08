@@ -40,7 +40,6 @@ customElements.define(
 
         .img {
           height: 100px;
-          width: 100px;
         }
 
         .form-container {
@@ -87,11 +86,13 @@ customElements.define(
     }
 
     render() {
+      const mercuryImg =
+        require("../../images/1086121.png") as HTMLImageElement;
       this.shadow.innerHTML = `
         <header class="header"></header>
         <div class="sign-container">
           <div class="form-container">
-              <img class="img" src="https://picsum.photos/200/200" alt="">
+              <img class="img" src="${mercuryImg}" alt="logo">
 
               <div class="form">
                 <label class ="label-email label">
@@ -157,8 +158,8 @@ customElements.define(
         });
 
         state.main(() => {
-          state.connectChatroom();
           Router.go("/chat");
+          state.connectChatroom();
         });
       });
     }

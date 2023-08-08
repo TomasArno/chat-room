@@ -1,3 +1,4 @@
+import { Router } from "@vaadin/router";
 import { state } from "../../state";
 customElements.define(
   "init-chat",
@@ -15,21 +16,66 @@ customElements.define(
       const style = document.createElement("style");
 
       style.innerHTML = `
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;    
+        }
+
         .gen-container {
+          background: lightgrey;
           height: 100vh;
           width: 100%;
           display: flex;
           flex-direction: column;
+          align-items: center;
           row-gap: 20px;
         }
 
-        .msg-container {
-          height: 100%;
+        .wrapper {
+          width: 100%;
+        }
+
+        .descrip-container {
           display: flex;
           flex-direction: column;
-          row-gap: 6px;
-          overflow: scroll;
-          padding: 0 20px;
+          align-items: center;
+        }
+
+        .arrow_back_img {
+          height: 16px;
+          position: absolute;
+          top: 15px;
+          left: 15px;
+        }
+
+        .title {
+          padding-top: 11px;
+          text-align: center;
+          font-size: 30px;
+        }
+
+        .room-id {
+          width: 80%;
+          max-width: 850px;
+          text-align: end;
+          font-size: 16px;
+        }
+
+        .msg-container {
+          background: white;
+          overflow-x: hidden;
+          overflow-y: scroll;
+          padding: 5px 20px 0 20px;
+          
+          width: 80%;
+          max-width: 850px;
+          height: 100%;
+
+          box-shadow: 0px 1px 27px -7px #979797;
+
+          display: flex;
+          flex-direction: column;
         }
 
         .p {
@@ -38,19 +84,31 @@ customElements.define(
         }
 
         .btn-container {
-          max-width: 285px;
-          margin: 0 auto 50px auto;
+          padding: 0 20px;
+        }
+        
+        @media (min-width: 375px){
+          .btn-container {
+            padding: 0;
+            margin: 26px auto;
+          }
         }
             `;
       this.shadow.appendChild(style);
     }
 
     render() {
+      const arrowBackImg =
+        require("../../images/arrow-ios-back_1.svg") as HTMLImageElement;
+
       this.shadow.innerHTML = `
       <div class="gen-container">
-        <div class="descrip-container">
-          <h2 class="title">Chat</h2>
-          <p class ="room-id">Room ID: ${state.data.shortRoomId}</p>
+        <div class="wrapper">
+          <img id="arrow_back" class="arrow_back_img" src="${arrowBackImg}" alt="logo">
+          <div class="descrip-container"> 
+            <h2 class="title">Chat</h2>
+            <p class ="room-id">Room ID: ${state.data.shortRoomId}</p>
+          </div>
         </div>
 
         <div class="msg-container"></div>
@@ -78,6 +136,17 @@ customElements.define(
       });
 
       this.addStyles();
+
+      this.setListeners();
+    }
+    setListeners() {
+      const arrowBackEl = this.shadow.getElementById(
+        "arrow_back"
+      ) as HTMLImageElement;
+
+      arrowBackEl.addEventListener("click", () => {
+        Router.go("/");
+      });
     }
   }
 );

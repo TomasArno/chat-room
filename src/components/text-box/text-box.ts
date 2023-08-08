@@ -27,7 +27,7 @@ customElements.define(
                     max-width: 250px;
                     padding: 12px;
                     font-size: 18px;
-                    border-radius: 3px;
+                    border-radius: 10px;
                 }
             `;
       this.shadow.appendChild(style);
@@ -49,10 +49,10 @@ customElements.define(
 
       if (userName == state.data.userName) {
         messageCont.style.justifyContent = "flex-end";
-        message.style.background = "red";
+        message.style.background = "rgb(154 152 152)";
       } else {
         messageCont.style.justifyContent = "flex-start";
-        message.style.background = "orange";
+        message.style.background = "#FFC269";
       }
       this.addStyles();
     }
