@@ -3,6 +3,7 @@ import * as path from "path";
 import { fsDb, rtDb } from "./db_admin";
 import { v4 as uuidv4 } from "uuid";
 import * as cors from "cors";
+
 const app = express();
 const port = process.env.PORT || 2000;
 
@@ -15,12 +16,13 @@ const roomsColl = fsDb.collection("rooms");
 app.get("/env", (req, res) => {
   res.json({ environment: process.env.ENVIRONMENT });
 });
+
 app.get("/db-host", (req, res) => {
   res.json({ dataBaseUrl: process.env.DB_URL });
 });
 
-app.post("/auth", (req, res) => {
-  const { email } = req.body;
+app.get("/users", (req, res) => {
+  const { email } = req.query;
 
   usersColl
     .where("email", "==", email)
@@ -34,7 +36,7 @@ app.post("/auth", (req, res) => {
     });
 });
 
-app.post("/signup", (req, res) => {
+app.post("/users", (req, res) => {
   const { email } = req.body;
   const { name } = req.body;
 

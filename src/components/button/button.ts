@@ -79,6 +79,5 @@ customElements.define(
       }
       this.addStyles();
     }
-    addListeners() {}
   }
 );

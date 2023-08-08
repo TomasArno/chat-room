@@ -72,8 +72,9 @@ customElements.define(
         }
 
         .input {
-          width: 100%;
           padding: 8.85px 13px;
+          border-radius: 10px;
+          width: 100%;
           height: 40px;
           font-size: 16px;
         }
@@ -88,6 +89,7 @@ customElements.define(
     render() {
       const mercuryImg =
         require("../../images/1086121.png") as HTMLImageElement;
+
       this.shadow.innerHTML = `
         <header class="header"></header>
         <div class="sign-container">

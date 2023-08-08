@@ -1,16 +1,7 @@
 import { rtDb } from "./firebase";
+import { newState, FormData } from "./interfaces";
 
 const API_BASE_URL = process.env.API_URL;
-
-type newState = {
-  userName: string;
-  longRoomId: string;
-  shortRoomId: string;
-  messagesList: any;
-  userId: string;
-  email: string;
-  option: string;
-};
 
 export const state = {
   data: {
@@ -40,12 +31,11 @@ export const state = {
   },
 
   connectChatroom() {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
 
     const chatRoomsRef = rtDb.ref(`/rooms/${lastState.longRoomId}/messages`);
 
     chatRoomsRef.on("value", (snapshot) => {
-      console.log("CAMBIOS");
       const messages = snapshot.val() as [];
 
       lastState.messagesList = messages.slice(1);
@@ -55,7 +45,7 @@ export const state = {
   },
 
   hasBasicCredentials() {
-    const cs = this.getState();
+    const cs: newState = this.getState();
 
     if (cs.email && cs.userName && cs.option) {
       return true;
@@ -64,13 +54,8 @@ export const state = {
     }
   },
 
-  setBasicData(formData: {
-    email: string;
-    userName: string;
-    option: string;
-    shortRoomId?: string;
-  }) {
-    const lastState = this.getState();
+  setBasicData(formData: FormData) {
+    const lastState: newState = this.getState();
 
     lastState.userName = formData.userName;
     lastState.email = formData.email;
@@ -80,11 +65,11 @@ export const state = {
     this.setState(lastState);
   },
 
-  async main(callback: any) {
+  async main(callback: () => any) {
     if (this.hasBasicCredentials()) {
       await this.signIn();
 
-      const lastState = state.getState();
+      const lastState: newState = this.getState();
 
       if (!lastState.userId) {
         await this.signUp();
@@ -97,7 +82,7 @@ export const state = {
         await this.joinRoom();
       }
 
-      const cs = state.getState();
+      const cs: newState = this.getState();
       if (cs.longRoomId) {
         callback();
       }
@@ -107,17 +92,16 @@ export const state = {
   },
 
   async signIn() {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
 
-    const authData = await fetch(API_BASE_URL + "/auth", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        email: lastState.email,
-      }),
-    });
+    const authData = await fetch(
+      API_BASE_URL + `/users?email=${lastState.email}`,
+      {
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
 
     if (authData.status == 400) {
       const { err } = await authData.json();
@@ -132,9 +116,9 @@ export const state = {
   },
 
   async signUp() {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
 
-    const userIdData = await fetch(API_BASE_URL + "/signup", {
+    const userIdData = await fetch(API_BASE_URL + "/users", {
       method: "post",
       headers: {
         "content-type": "application/json",
@@ -151,13 +135,15 @@ export const state = {
     } else {
       const { userId } = await userIdData.json();
       lastState.userId = userId;
+
       state.setState(lastState);
       console.log("Usuario creado, este es su id: " + userId);
     }
   },
 
   async createRoom() {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
+
     if (lastState.userId) {
       const roomIdData = await fetch(API_BASE_URL + "/rooms", {
         method: "post",
@@ -182,7 +168,7 @@ export const state = {
   },
 
   async joinRoom() {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
 
     const rtDbRoomIdData = await fetch(
       API_BASE_URL +
@@ -200,7 +186,8 @@ export const state = {
   },
 
   async sentMessage(message: { msg: string }) {
-    const lastState = this.getState();
+    const lastState: newState = this.getState();
+
     const { msg } = message;
 
     if (msg) {
